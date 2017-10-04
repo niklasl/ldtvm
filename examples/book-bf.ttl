@@ -1,0 +1,22 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix : <http://id.loc.gov/ontologies/bibframe/>
+prefix lcrel: <http://id.loc.gov/vocabulary/relators/>
+base <http://example.org/>
+
+</abstract/a> a :Text ;
+    :content :Text ;
+    :title [ :mainTitle "A" ] ;
+    :contribution [
+            :agent </person/a> ;
+            :role lcrel:ill
+        ] .
+
+</work/a> a :Print ;
+    :carrier lcrdacarrier:TODOPaper ;
+    :instanceOf </abstract/a> ;
+    :identifiedBy [ a :Isbn ;
+            rdf:value "12-3456-789-0" ] ;
+    :provisionActivity [ a :Publication ;
+            :agent </org/a> ;
+            :date "2017" ] .

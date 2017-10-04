@@ -1,0 +1,62 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfa: <http://www.w3.org/ns/rdfa#>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix schema: <http://schema.org/>
+prefix bf: <http://id.loc.gov/ontologies/bibframe/>
+prefix lcrel: <http://id.loc.gov/vocabulary/relators/>
+
+schema:Book rdfs:subClassOf bf:Text .
+bf:Text owl:equivalentClass schema:Book, dcterms:BibliographicResource .
+bf:Print rdfs:subClassOf schema:Book, schema:Product .
+
+lcrel:aut
+    owl:equivalentProperty schema:author ;
+    rdfs:subPropertyOf dcterms:creator .
+
+lcrel:ill
+    owl:equivalentProperty schema:illustrator ;
+    rdfs:subPropertyOf dcterms:contributor .
+
+dcterms:title
+    rdfs:subPropertyOf schema:name ;
+    owl:propertyChainAxiom ( bf:title bf:mainTitle ) .
+
+schema:isbn
+    rdfs:subPropertyOf dcterms:identifier ;
+    owl:propertyChainAxiom ( [ rdfs:subPropertyOf bf:identifiedBy ; rdfs:range bf:Isbn ] rdf:value ) .
+
+schema:datePublished
+    rdfs:subPropertyOf dcterms:issued ;
+    owl:propertyChainAxiom ( [ rdfs:subPropertyOf bf:provisionActivity ; rdfs:range bf:Publication ] bf:date ) .
+
+dcterms:publisher
+    owl:equivalentProperty schema:publisher ;
+    owl:propertyChainAxiom ( [ rdfs:subPropertyOf bf:provisionActivity ; rdfs:range bf:Publication ] bf:agent ) .
+
+# QualifiedRole or RelationalEvent ...
+# rdf:Statement
+bf:Contribution
+    rdfs:subClassOf rdf:Statement, [
+            owl:onProperty rdf:predicate; owl:hasValue dcterms:contributor ] .
+#dcterms:contributor owl:propertyChainAxiom (bf:contribution bf:agent) ;
+bf:contribution
+    rdfs:range bf:Contribution ;
+    rdfs:subPropertyOf [ owl:inverseOf rdf:subject ] .
+bf:role
+    rdfs:domain bf:Contribution ;
+    rdfs:subPropertyOf rdf:predicate .
+bf:agent
+    rdfs:domain bf:Contribution ;
+    rdfs:subPropertyOf rdf:object .
+
+# rdfa:Pattern
+bf:instanceOf rdfs:subPropertyOf schema:exampleOfWork, dcterms:isFormatOf, rdfa:copy .
+bf:expressionOf rdfs:subPropertyOf schema:exampleOfWork, dcterms:isVersionOf, rdfa:copy .
+
+bibo:isbn owl:equivalentProperty schema:isbn .
+bibo:isbn10 rdfs:subPropertyOf schema:isbn .
+bibo:isbn13 rdfs:subPropertyOf schema:isbn .
+bibo:Book rdfs:subPropertyOf schema:Book .
