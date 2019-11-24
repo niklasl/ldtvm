@@ -1,0 +1,19 @@
+{
+  "name": "ldtvm",
+  "description": "Linked Data Target Vocabulary Maps",
+  "author": "Niklas Lindström <lindstream@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/niklasl/ldtvm",
+  "version": "0.0.0-snapshot",
+  "bin": "code/cli.js",
+  "dependencies": {
+    "esm": "^3.2.22",
+    "ldtr": "file:../ldtr"
+  },
+  "devDependencies": {
+    "markdown": "^0.5.0"
+  },
+  "scripts": {
+    "test": "node examples/test-specs.js"
+  }
+}
