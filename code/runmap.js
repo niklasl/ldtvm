@@ -1,7 +1,8 @@
 exports.mapTo = mapTo
 
-function mapTo (mapping, indata, dropUnmapped = true) {
-  let {targetMap, baseMap} = mapping
+function mapTo (mapping, indata, {dropUnmapped = true, compact = false} = {}) {
+  let {target, targetMap, baseMap} = mapping
+  let vocab = target['@vocab']
 
   let result = {}
 
@@ -27,15 +28,25 @@ function mapTo (mapping, indata, dropUnmapped = true) {
     for (let it of rules) {
       if (typeof it === 'object') {
         let {valueFrom, property, propertyFrom, match} = it
-        // TODO: if match
         // TODO: use both property and propertyFrom if present
         if (propertyFrom) {
           property = value[0][propertyFrom][0]['@id']
           if (targetMap[property]) property = targetMap[property]
         }
+        if (targetMap[property]) property = targetMap[property]
         let outvalue = value
+        // TODO: if match + use baseMap
+        let matcher
+        if (match && match['@type']) {
+          matcher = v => v['@type'].filter(t => t === match['@type']).length
+        } else {
+          matcher = v => true
+        }
         if (valueFrom) {
-          outvalue = value.map(v => v[valueFrom]).reduce((a, b) => a.concat(b), [])
+          outvalue = value
+            .filter(matcher)
+            .map(v => v[valueFrom])
+            .reduce((a, b) => a.concat(b), [])
         }
         outvalue = outvalue.map(v => targetMap[v] ? targetMap[v] : v)
         if (property != null) {
@@ -56,6 +67,15 @@ function mapTo (mapping, indata, dropUnmapped = true) {
           let outv = Array.isArray(mapv) ? [] : {}
           modify(mapv, outv)
           mapv = outv
+        } else {
+          if (compact && vocab) {
+            if (typeof mapv === 'string' && mapv.startsWith(vocab)) {
+              mapv = mapv.substring(vocab.length)
+            }
+          }
+        }
+        if (compact && vocab) {
+          if (mapk.startsWith(vocab)) mapk = mapk.substring(vocab.length)
         }
         outo[mapk] = mapv
       }
@@ -64,5 +84,8 @@ function mapTo (mapping, indata, dropUnmapped = true) {
 
   modify(indata, result)
 
+  if (compact) {
+    result['@context'] = target
+  }
   return result
 }

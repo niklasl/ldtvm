@@ -1,24 +1,16 @@
+require = require("esm")(module)
 const {read} = require('./util')
 const {makeTargetMap} = require('./makemap')
 const {mapTo} = require('./runmap')
 
-/*
-set-mapping-by-context(-or-vocab)
-  mapping-structure: {
-    [from all kinds of vocabularies; start with those referred to in the given
-     context, but any seen is useful to consume wild data (provided that
-     those seen are have paths to terms (including known equivs)
-     within the context]
-    source term: inferred path to target with requirements or optional defaults along it
-}
-*/
-
 if (require.main === module) {
-  const {parseArgs} = require('../../ldtr/lib/util/args')
+  const argsParser = require('ldtr/lib/util/args')
 
-  let opts = parseArgs(process.argv.slice(2),
-    {vocab: null, target: null},
-    {v: 'vocab', t: 'target'})
+  let opts = argsParser
+    .option('--vocab', '-v')
+    .option('--target', '-t')
+    .flag('--compact', '-c')
+    .parse(process.argv.slice(2))
 
   var infile = opts.args[0]
 
@@ -28,7 +20,7 @@ if (require.main === module) {
         vocab => makeTargetMap(vocab, opts.target)),
       read(infile, {expand: true})
     ]).then(([mapping, indata]) => {
-      let mapped = mapTo(mapping, indata)
+      let mapped = mapTo(mapping, indata, opts)
       console.log(JSON.stringify(mapped, null, 2))
     })
   } else {

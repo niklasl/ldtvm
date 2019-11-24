@@ -1,7 +1,6 @@
-//const ldtr = require('ldtr')
-const ldtr = require('../../ldtr/lib/reader')
-const cx = require('../../ldtr/lib/context/algorithm')
-//ldtr.read(infile, {expand: true})
+const ldtr = require('ldtr')
+const cx = require('ldtr/lib/jsonld/algorithm')
+//ldtr.parse(infile, {expand: true})
 exports.read = (infile, opts) =>
   new Promise((resolve, reject) => {
     ldtr.read(infile).then(result => {
