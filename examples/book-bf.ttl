@@ -1,7 +1,9 @@
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix : <http://id.loc.gov/ontologies/bibframe/>
 prefix lcrel: <http://id.loc.gov/vocabulary/relators/>
+prefix lccarrier: <http://id.loc.gov/vocabulary/carriers/>
 base <http://example.org/>
 
 </abstract/a> a :Text ;
@@ -10,13 +12,17 @@ base <http://example.org/>
     :contribution [
             :agent </person/a> ;
             :role lcrel:ill
-        ] .
+        ] ;
+  :subject </topic/stuff> .
 
-</work/a> a :Print ;
-    :carrier lcrdacarrier:TODOPaper ;
+</instance/a> a :Print ;
+    :carrier lccarrier:nc ;
     :instanceOf </abstract/a> ;
     :identifiedBy [ a :Isbn ;
             rdf:value "12-3456-789-0" ] ;
     :provisionActivity [ a :Publication ;
             :agent </org/a> ;
             :date "2017" ] .
+
+</topic/stuff> a :Topic ;
+    skos:prefLabel "Stuff" .

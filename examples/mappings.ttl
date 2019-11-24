@@ -1,8 +1,10 @@
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix rdfa: <http://www.w3.org/ns/rdfa#>
 prefix dcterms: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
 prefix bibo: <http://purl.org/ontology/bibo/>
 prefix schema: <http://schema.org/>
 prefix bf: <http://id.loc.gov/ontologies/bibframe/>
@@ -10,7 +12,15 @@ prefix lcrel: <http://id.loc.gov/vocabulary/relators/>
 
 schema:Book rdfs:subClassOf bf:Text .
 bf:Text owl:equivalentClass schema:Book, dcterms:BibliographicResource .
-bf:Print rdfs:subClassOf schema:Book, schema:Product .
+bf:Print a owl:Class, dcterms:MediaType; rdfs:subClassOf schema:Book, schema:Product .
+
+dcterms:MediaType a rdfs:Class ; rdfs:subClassOf dcterms:MediaTypeOrExtent .
+
+dcterms:creator rdfs:subPropertyOf dcterms:contributor .
+
+dcterms:format a rdf:Property ;
+    skos:broadMatch rdf:type, bf:media, bf:carrier ;
+    rdfs:range dcterms:MediaTypeOrExtent .
 
 lcrel:aut
     owl:equivalentProperty schema:author ;
@@ -20,9 +30,54 @@ lcrel:ill
     owl:equivalentProperty schema:illustrator ;
     rdfs:subPropertyOf dcterms:contributor .
 
+bf:Electronic rdfs:subClassOf schema:MediaObject .
+
+bf:Work rdfs:subClassOf schema:CreativeWork .
+
+bf:Text rdfs:subClassOf schema:Book .
+
+bf:Agent owl:equivalentClass foaf:Agent .
+
+bf:Person owl:equivalentClass foaf:Person, schema:Person .
+
+bf:Organization owl:equivalentClass foaf:Organization, schema:Organization .
+
+bf:AdministrativeMetadata rdfs:subClassOf schema:CreativeWork .
+
+bf:Item rdfs:subClassOf schema:Product .
+
+schema:CategoryCode owl:equivalentClass skos:Concept .
+
+schema:codeValue owl:equivalentProperty bf:code .
+
+schema:inCodeSet owl:equivalentProperty skos:inScheme .
+
+bf:code rdfs:subClassOf skos:notation .
+
+# TODO: CategoryCode should be implied through Concept here
+bf:Topic rdfs:subClassOf skos:Concept, schema:CategoryCode .
+
+skos:prefLabel rdfs:subPropertyOf schema:name .
+
+bf:administrativeMetadata rdfs:subPropertyOf schema:mainEntityOfPage .
+
+bf:subject owl:equivalentProperty dcterms:subject, schema:about .
+
+bf:name rdfs:subPropertyOf schema:name .
+
+schema:givenName owl:equivalentProperty foaf:givenName .
+
+foaf:familyName owl:equivalentProperty schema:familyName .
+
 dcterms:title
     rdfs:subPropertyOf schema:name ;
     owl:propertyChainAxiom ( bf:title bf:mainTitle ) .
+
+schema:identifier
+    #owl:propertyChainAxiom ( bf:identifiedBy rdf:value ) ;
+    # TODO: this is currently needed to prevent both :identifier and :isbn ...
+    owl:propertyChainAxiom ( [ rdfs:subPropertyOf bf:identifiedBy ; rdfs:range bf:Identifier ] rdf:value ) ;
+    owl:equivalentProperty  dcterms:identifier .
 
 schema:isbn
     rdfs:subPropertyOf dcterms:identifier ;
@@ -59,4 +114,4 @@ bf:expressionOf rdfs:subPropertyOf schema:exampleOfWork, dcterms:isVersionOf, rd
 bibo:isbn owl:equivalentProperty schema:isbn .
 bibo:isbn10 rdfs:subPropertyOf schema:isbn .
 bibo:isbn13 rdfs:subPropertyOf schema:isbn .
-bibo:Book rdfs:subPropertyOf schema:Book .
+bibo:Book rdfs:subClassOf schema:Book .
