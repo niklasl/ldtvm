@@ -14,9 +14,7 @@ See [examples/Spec.md](examples/Spec.md).
 
 ## Presentations
 
-A presentation on the TVM approach held at SWIB 2019:
-- [slides](https://swib.org/swib19/slides/08_lindstroem_target-vocabulary-maps.pdf),
-- [video](https://www.youtube.com/watch?v=A_1BIDAlbeI).
+* A presentation on the TVM approach held at SWIB 2019: [slides](https://swib.org/swib19/slides/08_lindstroem_target-vocabulary-maps.pdf), [video](https://www.youtube.com/watch?v=A_1BIDAlbeI).
 
 ## Implementations
 
@@ -27,17 +25,18 @@ This repository contains the original (incomplete) example prototype.
 Setup:
 
     $ npm i
-    $ npm test
 
-(Note: currently requires a local git clone of [ldtr](https://github.com/niklasl/ldtr) side-by-side with this repository.)
+(Note: currently requires a local git clone of [LDTR](https://github.com/niklasl/ldtr) side-by-side with this repository.)
 
 Example Use:
 
-    $ node code/cli.js -c -v examples/mappings.ttl -t 'http://schema.org/' examples/book-bf.ttl | ldtr -tjsonld -ottl
+    $ node code/cli.js -c -v examples/mappings.ttl -t 'http://schema.org/' examples/book-bf.ttl
+
+(Pipe that to `ldtr -tjsonld -ottl` for compact Turtle output.)
 
 You can also verify the examples in the spec document using:
 
-    $ node examples/test-specs.js
+    $ npm test
 
 ### TRLD
 
