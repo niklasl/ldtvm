@@ -10,7 +10,7 @@ The resulting map is then used to translate input data, described by any terms f
 
 ## Examples
 
-See [examples/Spec.md](blob/master/examples/Spec.md).
+See [examples/Spec.md](examples/Spec.md).
 
 ## Presentations
 
